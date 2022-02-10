@@ -11,7 +11,8 @@
 	<script>
 		document.querySelector('h2').innerText += window.origin;
 		document.querySelector('pre').innerText = `globalThis.crossOriginIsolated: ${globalThis.crossOriginIsolated}`;
-		console.log('IFRAME', globalThis.crossOriginIsolated)
+		console.log('IFRAME', 'globalThis.crossOriginIsolated', globalThis.crossOriginIsolated)
+		console.log('IFRAME', 'typeof SharedArrayBuffer', typeof SharedArrayBuffer)
 	</script>
 
 	<script>
