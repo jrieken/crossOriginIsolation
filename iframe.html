@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Page Title</title>
+</head>
+<body style="background-color: aliceblue;">
+	<h2>iframe: </h2>
+	<pre></pre>
+	<textarea rows="13" cols="83"></textarea>
+	<script>
+		document.querySelector('h2').innerText += window.origin;
+		document.querySelector('pre').innerText = `globalThis.crossOriginIsolated: ${globalThis.crossOriginIsolated}`;
+		console.log('IFRAME', globalThis.crossOriginIsolated)
+	</script>
+
+	<script>
+		const ident = window.origin;
+		window.addEventListener('message', event => {
+
+			const ta = document.querySelector('textarea');
+			ta.textContent += `${event.origin} says => ${event.data}\n\n`;
+
+			console.log(`${ident} DID receive from ${event.origin}`, event.data);  
+			try {
+				window.parent.postMessage(`Hello BACK from iframe`, event.origin)
+			} catch (err) {
+				console.error(err)
+			}
+		}); 
+	</script>
+
+	<script>
+		try{
+			new Worker('./worker.js')
+		} catch(err) {
+			console.error(err)
+		}
+	</script>
+</body>
+</html>

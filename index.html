@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Page Title</title>
+</head>
+<body>
+	<h2>Embedder: </h2>
+	<pre></pre>
+	<textarea rows="13" cols="83"></textarea>	
+	<script>
+		document.querySelector('h2').innerText += window.origin;
+		document.querySelector('pre').innerText = `globalThis.crossOriginIsolated: ${globalThis.crossOriginIsolated}`;
+		console.log('IFRAME', globalThis.crossOriginIsolated)
+	</script>
+
+	<script>
+		window.addEventListener("message", (event) => {
+			console.group()
+			console.log(event.origin)
+			console.log(event.data)
+			console.groupEnd()
+
+			const ta = document.querySelector('textarea');
+			ta.textContent += `${event.origin} says => ${event.data}\n\n`;
+		});
+	</script>
+
+	<script>
+		// same-origin
+		const iframe1 = document.createElement('iframe');
+		iframe1.src = '/iframe.html';
+		iframe1.setAttribute('allow', 'cross-origin-isolated');
+		iframe1.id = '1'
+		iframe1.width = '100%';
+		iframe1.height = '200'
+		document.body.appendChild(iframe1);
+		
+		// cross-origin
+		const src = window.location.search.substr(1);
+		const iframe2 = document.createElement('iframe');
+		iframe2.src = src + '/iframe.html';
+		iframe2.setAttribute('allow', 'cross-origin-isolated');
+		iframe2.id = '2'
+		iframe2.width = '100%';
+		iframe2.height = '200'
+		document.body.appendChild(iframe2);
+		
+
+		setTimeout(() => {
+			iframe1.contentWindow.postMessage('Hello from Embedder', window.origin);
+			iframe2.contentWindow.postMessage('Hello from Embedder', src);
+		}, 250)
+
+	</script> 
+
+</body>
+</html>
